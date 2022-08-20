@@ -93,14 +93,24 @@ channel establishment and [BOLT #3: Funding Transaction Output](03-transactions.
 
 ### Conditional Payments
 
+<!--
 A Lightning channel only allows payment between two participants, but channels can be connected together to form a network that allows payments between all members of the network. This requires the technology of a conditional payment, which can be added to a channel,
 e.g. "you get 0.01 bitcoin if you reveal the secret within 6 hours".
 Once the recipient presents the secret, that bitcoin transaction is
 replaced with one lacking the conditional payment and adding the funds
 to that recipient's output.
+-->
 
+ライトニングチャネルは２人の参加者間でのみ決済が可能ですが、チャネルを連結してネットワークを形成し、そのネットワークの全メンバー間で決済を可能にできます。そのためには、チャネルを追加できる条件付きの支払いという技術が必要です。
+例：「６時間以内に秘密を明かしたら0.01ビットコインをプレゼント」
+受信者が秘密を提示すると、そのビットコインの取引条件は条件付き支払いの無いものに置き換えられ、そのビットコイン取引は、その資金がその受信者の出力に追加されます。
+
+<!--
 See [BOLT #2: Adding an HTLC](02-peer-protocol.md#adding-an-htlc-update_add_htlc) for the commands a participant uses to add a conditional payment, and [BOLT #3: Commitment Transaction](03-transactions.md#commitment-transaction) for the
 complete format of the bitcoin transaction.
+-->
+
+参加者が条件付き支払いを追加するためのコマンドは、[BOLT #2: Adding an HTLC](02-peer-protocol.md#adding-an-htlc-update_add_htlc)を、またビットコイン取引の完全な形式は[BOLT #3: Commitment Transaction](03-transactions.md#commitment-transaction)を参照して下さい。
 
 ### Forwarding
 
