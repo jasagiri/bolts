@@ -1,15 +1,29 @@
 # BOLT #0: Introduction and Index
-
+<!--
 Welcome, friend! These Basis of Lightning Technology (BOLT) documents
 describe a layer-2 protocol for off-chain bitcoin transfer by mutual
 cooperation, relying on on-chain transactions for enforcement if
 necessary.
+-->
 
+ようこそ、友よ! BOLT（Basis of Lightning Technology）とは？
+相互協力によるオフチェーンビットコイン転送のためのレイヤー2プロトコルを記述しています。
+オンチェーン取引に依存し、必要に応じて強制することができます。
+必要な場合はオンチェーン取引に依存します。
+
+<!--
 Some requirements are subtle; we have tried to highlight motivations
 and reasoning behind the results you see here. I'm sure we've fallen
 short; if you find any part confusing or wrong, please contact us and
 help us improve.
+-->
 
+このページでは、その動機と理由を説明します。
+ここに掲載されている結果は、その動機と理由を明らかにしたものです。しかし
+もし、わかりにくいところや間違っているところがあれば、ぜひご連絡ください。
+改善にご協力ください。
+
+<!--
 This is version 0.
 
 1. [BOLT #1](01-messaging.md): Base Protocol
@@ -22,27 +36,60 @@ This is version 0.
 9. [BOLT #9](09-features.md): Assigned Feature Flags
 10. [BOLT #10](10-dns-bootstrap.md): DNS Bootstrap and Assisted Node Location
 11. [BOLT #11](11-payment-encoding.md): Invoice Protocol for Lightning Payments
+-->
+
+これはバージョン0です。
+
+1. [BOLT #1](01-messaging.md): 基本プロトコル
+2. [BOLT #2](02-peer-protocol.md): チャネル管理用ピアプロトコル
+3. [BOLT #3](03-transactions.md): ビットコイン取引とスクリプトフォーマット
+4. [BOLT #4](04-onion-routing.md): オニオンルーティングプロトコル
+5. [BOLT #5](05-onchain.md): オンチェーン取引処理の推奨事項
+7. [BOLT #7](07-routing-gossip.md): P2P ノードとチャネルの発見
+8. [BOLT #8](08-transport.md): 暗号化と認証された転送
+9. [BOLT #9](09-features.md): 割り当てられた機能フラグ
+10. [BOLT #10](10-dns-bootstrap.md): DNS ブートストラップとアシストノードの位置関係
+11. [BOLT #11](11-payment-encoding.md): ライトニング支払いのインボイスプロトコル
 
 ## The Spark: A Short Introduction to Lightning
 
+<!--
 Lightning is a protocol for making fast payments with Bitcoin using a
 network of channels.
+-->
+
+ライトニングは、チャネルのネットワークを使ったビットコインで高速に決済するためのプロトコルです。
 
 ### Channels
 
+<!--
 Lightning works by establishing *channels*: two participants create a
 Lightning payment channel that contains some amount of bitcoin (e.g.,
 0.1 bitcoin) that they've locked up on the Bitcoin network. It is
 spendable only with both their signatures.
+-->
 
+ライトニングは *チャネル* を確立することで機能します。：2人の参加者は、ビットコインネットワークにロックしたビットコイン（例：0.1BTC）を含むライトニングのペイメントチャネルを作成します。これは両者の署名がある場合のみ使用できます。
+
+<!--
 Initially they each hold a bitcoin transaction that sends all the
 bitcoin (e.g. 0.1 bitcoin) back to one party.  They can later sign a new bitcoin
 transaction that splits these funds differently, e.g. 0.09 bitcoin to one
 party, 0.01 bitcoin to the other, and invalidate the previous bitcoin
 transaction so it won't be spent.
+-->
 
+最初はそれぞれがビットコイン取引を行い、すべてのビットコイン（例えば0.1BTC）を一方の当事者に送り返します。
+この後、彼らは新しいビットコイン取引に署名できます。
+例えば、0.09ビットコインを一方の当事者に、0.01ビットコインをもう一方の当事者にというように。
+0.09ビットコイン、0.01ビットコインといった具合に、この資金を分割する新しいビットコイン取引に署名し、前のビットコイン取引を無効にできます。
+
+<!--
 See [BOLT #2: Channel Establishment](02-peer-protocol.md#channel-establishment) for more on
 channel establishment and [BOLT #3: Funding Transaction Output](03-transactions.md#funding-transaction-output) for the format of the bitcoin transaction that creates the channel.  See [BOLT #5: Recommendations for On-chain Transaction Handling](05-onchain.md) for the requirements when participants disagree or fail, and the cross-signed bitcoin transaction must be spent.
+-->
+
+チャネルの確立については、[BOLT #2: Channel Establishment](02-peer-protocol.md#channel-establishment)を参照してください。またチャネルを作成するビットコイン取引の形式については、[BOLT #3: Funding Transaction Output](03-transactions.md#funding-transaction-output)をご覧ください。参加者の意見が一致しない場合や失敗した場合の要件については、[BOLT #5: Recommendations for On-chain Transaction Handling](05-onchain.md)を参照し、相互署名されたビットコイン取引を消費する必要があります。
 
 ### Conditional Payments
 
@@ -263,7 +310,7 @@ See [BOLT #11: Invoice Protocol for Lightning Payments](11-payment-encoding.md) 
     *commitment revocation secret key*, it can create a *[penalty transaction](#penalty-transaction)*.
    * _See related: [mutual close](#mutual-close), [unilateral close](#unilateral-close)_
 
-* #### *Route*: 
+* #### *Route*:
   * A path across the Lightning Network that enables a payment
     from an *origin node* to a *[final node](#final-node)* across one or more
     *[hops](#hop)*.
@@ -314,7 +361,7 @@ See [BOLT #11: Invoice Protocol for Lightning Payments](11-payment-encoding.md) 
       Then kaboom: we'll hit the moon -- release Lightning!
       (Go, go, go, go; go, go, go, go, go, go)
 
- 
+
       We'll have QR codes, and smartphone apps, oh yeah.
       (Ooo ooo ooo ooo ooo ooo ooo)
       P2P messaging, and passive incomes, oh yeah.
