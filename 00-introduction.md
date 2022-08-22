@@ -114,12 +114,21 @@ complete format of the bitcoin transaction.
 
 ### Forwarding
 
+<!--
 Such a conditional payment can be safely forwarded to another
 participant with a lower time limit, e.g. "you get 0.01 bitcoin if you reveal the secret
 within 5 hours".  This allows channels to be chained into a network
 without trusting the intermediaries.
+-->
 
+このような条件付き支払いは、制限時間の短い別の参加者に安全に転送できます。
+例えば、「５時間以内に秘密を明かせば0.01BTCが貰えます。」というように。これにより、仲介者を信頼することなく、ネットワークにチャネルを連結させられます。
+
+<!--
 See [BOLT #2: Forwarding HTLCs](02-peer-protocol.md#forwarding-htlcs) for details on forwarding payments, [BOLT #4: Packet Structure](04-onion-routing.md#packet-structure) for how payment instructions are transported.
+-->
+
+支払いの転送については、[BOLT #2: Forwarding HTLCs](02-peer-protocol.md#forwarding-htlcs)を、支払いの転送方法については[BOLT #4: Packet Structure](04-onion-routing.md#packet-structure)を参照してください。
 
 ### Network Topology
 
