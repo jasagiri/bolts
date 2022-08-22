@@ -132,14 +132,23 @@ See [BOLT #2: Forwarding HTLCs](02-peer-protocol.md#forwarding-htlcs) for detail
 
 ### Network Topology
 
+<!--
 To make a payment, a participant needs to know what channels it can
 send through.  Participants tell each other about channel and node
 creation, and updates.
+-->
 
+参加者は支払いを行うために、どのようなチャネルで送信できるか知る必要があります。参加者は、チャネルとノードの作成と更新について互いに伝えます。
+
+<!--
 See [BOLT #7: P2P Node and Channel Discovery](07-routing-gossip.md)
 for details on the communication protocol, and [BOLT #10: DNS
 Bootstrap and Assisted Node Location](10-dns-bootstrap.md) for initial
 network bootstrap.
+-->
+
+通信プロトコルの詳細は、[BOLT #7: P2P Node and Channel Discovery](07-routing-gossip.md)を参照してください。また、初期のブートストラップについては、[BOLT #10: DNS
+Bootstrap and Assisted Node Location](10-dns-bootstrap.md)を参照してください。
 
 ### Payment Invoicing
 
