@@ -152,10 +152,17 @@ Bootstrap and Assisted Node Location](10-dns-bootstrap.md)を参照してくだ�
 
 ### Payment Invoicing
 
+<!--
 A participant receives invoices that tell them what payments to make.
+-->
 
+参加者は、支払い内容を記した請求書を受け取ります。
+
+<!--
 See [BOLT #11: Invoice Protocol for Lightning Payments](11-payment-encoding.md) for the protocol describing the destination and purpose of a payment such that the payer can later prove successful payment.
+-->
 
+支払者が後で支払いの成功を証明できるように、支払先と目的を記述するプロトコルについては、[BOLT #11: Invoice Protocol for Lightning Payments](11-payment-encoding.md)を参照してください。
 
 ## Glossary and Terminology Guide
 
