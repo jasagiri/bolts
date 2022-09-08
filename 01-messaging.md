@@ -2,18 +2,36 @@
 
 ## Overview
 
+<!--
 This protocol assumes an underlying authenticated and ordered transport mechanism that takes care of framing individual messages.
 [BOLT #8](08-transport.md) specifies the canonical transport layer used in Lightning, though it can be replaced by any transport that fulfills the above guarantees.
+-->
+このプロトコルは、個々のメッセージのフレーミングを行う認証され順序づけられたトランスポート機構を想定しています。
+[BOLT #8](08-transport.md) はライトニングで使用される標準的なトランスポート層を指定しますが、上記の補償を満たす任意のトランスポートに置き換えられます。
 
+<!--
 The default TCP port depends on the network used. The most common networks are:
 
 - Bitcoin mainet with port number 9735 or the corresponding hexadecimal `0x2607`;
 - Bitcoin testnet with port number 19735 (`0x4D17`);
 - Bitcoin signet with port number 39735 (`0xF87`).
+-->
 
+デフォルトのTCPポートは、使用するネットワークによって異なります。最も一般的なネットワークは：
+
+- ポート番号9735または対応する16進数`0x2607`のBitcoin mainnet
+- ポート番号19735 (`0x4D17`)のBitcoin testnet
+- ポート番号39735 (`0xF87`)のBitcoin signet。
+
+<!--
 The Unicode code point for LIGHTNING <sup>[1](#reference-1)</sup>, and the port convention try to follow the Bitcoin Core convention.
+-->
+LIGHTNING <sup>[1](#reference-1)</sup>のUnicodeコードポイント、およびポート規約はBitcoin Coreの規約に従おうとするものです。
 
+<!--
 All data fields are unsigned big-endian unless otherwise specified.
+-->
+データフィールドは、特に指定のない限り、全て符号なしビッグエンディアンです。
 
 ## Table of Contents
 
@@ -35,21 +53,37 @@ All data fields are unsigned big-endian unless otherwise specified.
 
 ## Connection Handling and Multiplexing
 
+<!--
 Implementations MUST use a single connection per peer; channel messages (which include a channel ID) are multiplexed over this single connection.
+-->
+実装では、１つのピアに対して１つの接続を使用しなければなりません(MUST)。チャネルメッセージ（チャネルIDを含む）は、この単一の接続上で多重化されます。
 
 ## Lightning Message Format
 
+<!--
 After decryption, all Lightning messages are of the form:
 
 1. `type`: a 2-byte big-endian field indicating the type of message
 2. `payload`: a variable-length payload that comprises the remainder of
    the message and that conforms to a format matching the `type`
 3. `extension`: an optional [TLV stream](#type-length-value-format)
+-->
+復号化後のライトニングメッセージは全て次のような形になります。
 
+1. `type`: メッセージの型を示す２バイトのビックエンディアンフィールドです。
+2. `payload`: メッセージの残りを構成する可変長のペイロードで、`type`に適合するフォーマットに従います。
+3. `extension`: オプションの[TLV stream](#type-length-value-format)
+
+<!--
 The `type` field indicates how to interpret the `payload` field.
 The format for each individual type is defined by a specification in this repository.
 The type follows the _it's ok to be odd_ rule, so nodes MAY send _odd_-numbered types without ascertaining that the recipient understands it.
+-->
+`type` フィールドは`payload`フィールドをどのように解釈するかを示します。
+個々の型のフォーマットは、このリポジトリの仕様で定義されています。
+型は _it's ok to be odd_ のルールに従いますので、ノードは受信者がそれを理解しているかどうかを確認せずに _odd_ 番号型を送信しても構いません（MAY）。
 
+<!--
 The messages are grouped logically into five groups, ordered by the most significant bit that is set:
 
   - Setup & Control (types `0`-`31`): messages related to connection setup, control, supported features, and error reporting (described below)
@@ -57,9 +91,21 @@ The messages are grouped logically into five groups, ordered by the most signifi
   - Commitment (types `128`-`255`): messages related to updating the current commitment transaction, which includes adding, revoking, and settling HTLCs as well as updating fees and exchanging signatures (described in [BOLT #2](02-peer-protocol.md))
   - Routing (types `256`-`511`): messages containing node and channel announcements, as well as any active route exploration (described in [BOLT #7](07-routing-gossip.md))
   - Custom (types `32768`-`65535`): experimental and application-specific messages
+-->
+メッセージは論理的に５つのグループに分類され、設定されているビットの上位から順番に表示されます。:
 
+  - Setup & Control (types `0`-`31`): 接続のセットアップ、コントロール、サポートされる機能、エラー報告に関するメッセージ（後述）
+  - Channel (types `32`-`127`): マイクロペイメントチャネルの設定と削除に使用されるメッセージ[BOLT #2](02-peer-protocol.md)で説明されています。
+  - Commitment (types `128`-`255`): HTLCの追加、取消し、決済、手数料の更新、署名の交換など、現在の承認取引の更新に関連するメッセージ([BOLT #2](02-peer-protocol.md)で説明されています。)
+  - Routing (types `256`-`511`): ノードとチャネルのアナウンスを含むメッセージと、アクティブなルート検索([BOLT #7](07-routing-gossip.md)で説明されています。)
+  - Custom (types `32768`-`65535`): 実験的およびアプリケーション固有のメッセージ。
+
+<!--
 The size of the message is required by the transport layer to fit into a 2-byte unsigned int; therefore, the maximum possible size is 65535 bytes.
+-->
+メッセージのサイズは、トランスポート層から２バイトのunsigned intに収まるように要求されるため、可能な最大サイズは65535バイトです。
 
+<!--
 A sending node:
   - MUST NOT send an evenly-typed message not listed here without prior negotiation.
   - MUST NOT send evenly-typed TLV records in the `extension` without prior negotiation.
@@ -72,7 +118,19 @@ A sending node:
       additional data.
     - SHOULD pick an even `type` identifiers when regular nodes should reject
       the message and close the connection.
+-->
+送信ノード：
+  - 事前のネゴシエーションなしに、ここに列挙されていない均等型メッセージを送信してはなりません（MUST NOT）。
+  - 事前のネゴシエーションなしに `extension` に含まれる均等な型のTLVレコードを送信してはなりません（MUST NOT）。
+  - この仕様のオプションをネゴシエートする：
+    - そのオプションでアノテーションされた全てのフィールドを含まねばならない（MUST）。
+  - カスタムメッセージを定義する場合：
+    - 他のカスタム型との衝突を避けるために、ランダムな `type` を選ぶべきです（SHOULD）。
+    - [この問題](https://github.com/lightningnetwork/lightning-rfc/issues/716)にリストされている他の実践と衝突しない `type` を選ぶべきです（SHOULD）。
+    - 通常のノードが追加データを無視すべき場合には、機数の `type` 識別子を選ぶべきです（SHOULD）。
+    - 偶数の `type` 識別子は、通常のノードがメッセージを拒否して接続を閉じるべき時に選ぶべきです（SHOULD）。
 
+<!--
 A receiving node:
   - upon receiving a message of _odd_, unknown type:
     - MUST ignore the received message.
@@ -87,6 +145,21 @@ A receiving node:
     - Otherwise, if the `extension` is invalid:
       - MUST close the connection.
       - MAY fail the channels.
+-->
+送信ノード：
+  - _奇数_ の不明型メッセージを受信した場合：
+    - 受信したメッセージを無視しなければなりません（MUST）。
+  - _偶数_ の不明型のメッセージを受信した場合：
+    - 接続を閉じなければなりません（MUST）。
+    - チャネルに失敗しても構いません（MAY）。
+  - 内容に対して長さが十分でない既知のメッセージを受信した時：
+    - 接続を閉じなければなりません（MUST）。
+    - チャネルに失敗しても構いません（MAY）。
+  - `extension` のメッセージを受信した時：
+    - その `extension` を無視しても構いません（MAY）。
+    - もしくは、 `extension` が無効な場合：
+      - コネクションを綴じなければなりません（MUST）。
+      - チャネルに失敗しても構いません（MAY）。
 
 ### Rationale
 
@@ -509,7 +582,7 @@ decoded with BigSize should be checked to ensure they are minimally encoded.
 The following is an example of how to execute the BigSize decoding tests.
 ```golang
 func testReadBigSize(t *testing.T, test bigSizeTest) {
-        var buf [8]byte 
+        var buf [8]byte
         r := bytes.NewReader(test.Bytes)
         val, err := tlv.ReadBigSize(r, &buf)
         if err != nil && err.Error() != test.ExpErr {
