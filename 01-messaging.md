@@ -162,25 +162,36 @@ A receiving node:
       - チャネルに失敗しても構いません（MAY）。
 
 ### Rationale
-
+<!--
 By default `SHA2` and Bitcoin public keys are both encoded as
 big endian, thus it would be unusual to use a different endian for
 other fields.
+-->
+デフォルトでは、`SHA2` とBitcoinの公開鍵はどちらもビッグエンディアンでエンコードされ、したがって、たのフィールドに異なるエンディアンを使用する事は珍しいです。
 
+<!--
 Length is limited to 65535 bytes by the cryptographic wrapping, and
 messages in the protocol are never more than that length anyway.
+-->
+長さは暗号化によって65535バイトに制限され、プロトコルのメッセージはいずれにせよこの長さを超える事はありません。
 
+<!--
 The _it's ok to be odd_ rule allows for future optional extensions
 without negotiation or special coding in clients. The _extension_ field
 similarly allows for future expansion by letting senders include additional
 TLV data. Note that an _extension_ field can only be added when the message
 `payload` doesn't already fill the 65535 bytes maximum length.
+-->
+_it's ok to be odd_ ルールは、ネゴシエーションやクライアントでの特別なコーディングなしに、将来のオプション拡張を可能にします。_extension_ フィールドも同様に、送信者に追加のTLVデータを含ませる事で、将来の拡張を可能にします。_extension_ フィールドは、メッセージの `payload` が最大長の65535バイトを満たさない時のみ追加できる事に注意してください。
 
+<!--
 Implementations may prefer to have message data aligned on an 8-byte
 boundary (the largest natural alignment requirement of any type here);
 however, adding a 6-byte padding after the type field was considered
 wasteful: alignment may be achieved by decrypting the message into
 a buffer with 6-bytes of pre-padding.
+-->
+実装では、メッセージデータを８バイト境界に一列に並べることを好むかもしれません（ここでは、どの型でも自然なアライメント要件が最大です）。；しかし型フィールドの後に６バイトのパディングを追加する事は無駄だと考えられます。：６バイトの事前パディングを持つバッファにメッセージを復号化する事によって、一列に並べることを達成できます。
 
 ## Type-Length-Value Format
 
