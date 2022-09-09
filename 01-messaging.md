@@ -373,26 +373,48 @@ receiver to parse individual elements from `value`.
 
 ## Fundamental Types
 
+<!--
 Various fundamental types are referred to in the message specifications:
 
 * `byte`: an 8-bit byte
 * `u16`: a 2 byte unsigned integer
 * `u32`: a 4 byte unsigned integer
 * `u64`: an 8 byte unsigned integer
+-->
+メッセージの仕様には、さまざまな基本型が参照されています。：
 
+* `byte`: ８ビットバイト
+* `u16`: ２バイトの符号なし整数
+* `u32`: ４バイトの符号なし整数
+* `u64`: ８バイトの符号なし整数
+
+<!--
 Inside TLV records which contain a single value, leading zeros in
 integers can be omitted:
 
 * `tu16`: a 0 to 2 byte unsigned integer
 * `tu32`: a 0 to 4 byte unsigned integer
 * `tu64`: a 0 to 8 byte unsigned integer
+-->
+単一の値を含むTLVレコードの内部では、整数の先頭のゼロを省略できます。
 
+* `tu16`: ０から２バイトの符号なし整数
+* `tu32`: ０から４バイトの符号なし整数
+* `tu64`: ０から８バイトの符号なし整数
+
+<!--
 When used to encode amounts, the previous fields MUST comply with the upper
 bound of 21 million BTC:
 
 * satoshi amounts MUST be at most `0x000775f05a074000`
 * milli-satoshi amounts MUST be at most `0x1d24b2dfac520000`
+-->
+金額をエンコードする為に使用される場合、前のフィールドは２１００万BTCの上限を遵守しなければなりません（MUST）。
 
+* サトシの金額は最大で `0x000775f05a074000` でなければなりません（MUST）。
+* ミリサトシの金額は最大で `0x1d24b2dfac520000` でなければなりません（MUST）。
+
+<!--
 The following convenience types are also defined:
 
 * `chain_hash`: a 32-byte chain identifier (see [BOLT #0](00-introduction.md#glossary-and-terminology-guide))
@@ -402,6 +424,16 @@ The following convenience types are also defined:
 * `point`: a 33-byte Elliptic Curve point (compressed encoding as per [SEC 1 standard](http://www.secg.org/sec1-v2.pdf#subsubsection.2.3.3))
 * `short_channel_id`: an 8 byte value identifying a channel (see [BOLT #7](07-routing-gossip.md#definition-of-short-channel-id))
 * `bigsize`: a variable-length, unsigned integer similar to Bitcoin's CompactSize encoding, but big-endian.  Described in [BigSize](#appendix-a-bigsize-test-vectors).
+-->
+また、以下の便利な型も定義されています。
+
+* `chain_hash`: 32バイトのチェーン識別子（[BOLT #0](00-introduction.md#glossary-and-terminology-guide)を参照してください。）
+* `channel_id`: 32バイトの channel_id （[BOLT #2](02-peer-protocol.md#definition-of-channel-id)を参照してください。）
+* `sha256`: 32バイトのSHA2-256ハッシュ。
+* `signature`: 64バイトのビットコイン楕円曲線署名
+* `point`: 33バイトの楕円曲線ポイント（圧縮エンコーディング方式は[SEC 1 standard](http://www.secg.org/sec1-v2.pdf#subsubsection.2.3.3)）
+* `short_channel_id`: チャネルを識別する８バイトの値（[BOLT #7](07-routing-gossip.md#definition-of-short-channel-id)を参照してください。）
+* `bigsize`: びっとこいんのcompactSizeエンコーディングに似た可変長の符号なし整数ですが、ビッグエンディアンです。[BigSize](#appendix-a-bigsize-test-vectors)で説明されています。
 
 ## Setup Messages
 
