@@ -495,7 +495,7 @@ The optional `remote_addr` can be used to circumvent NAT issues.
 オプションの `remote_addr` は、NATの問題を解決する為に使用できます。
 
 #### Requirements
-
+<!--
 The sending node:
   - MUST send `init` as the first Lightning message for any connection.
   - MUST set feature bits as defined in [BOLT #9](09-features.md).
@@ -509,7 +509,20 @@ The sending node:
   - if it sets `remote_addr`:
     - MUST set it to a valid `address descriptor` (1 byte type and data) as described in [BOLT 7](07-routing-gossip.md#the-node_announcement-message).
     - SHOULD NOT set private addresses as `remote_addr`.
+-->
+送信ノード：
+  - 全てのコネクションの最初のライトニングメッセージとして `init` を送信しなければなりません（MUST）。
+  - [BOLT #9](09-features.md)で定義された特徴ビットを設定しなければなりません（MUST）。
+  - 未定義の特徴ビットは0に設定しなければなりません（MUST）。
+  - `globalfeatures` に13より大きな特徴を設定すべきではありません（SHOULD NOT）。
+  - `features` フィールドを表現する為に必要な最小の長さを使用すべきです（SHOULD）。
+  - `networks` にはゴシップやチャネルをオープンする全てのチェーンを設定すべきです（SHOULD）。
+  -  もしそのノードが受信側で、IP経由で接続された場合は、`remote_addr` にリモートIPアドレス（とポート）を設定すべきでしょう。
+  - もし `remote_addr` を設定したなら、：
+    - [BOLT 7](07-routing-gossip.md#the-node_announcement-message)にあるように、有効な `address descriptor` （１バイトの型とデータ）を設定しなければなりません。
+    - プライベートアドレスを `remote_addr` に設定してはなりません（SHOULD NOT）。
 
+<!--
 The receiving node:
   - MUST wait to receive `init` before sending any other messages.
   - MUST combine (logical OR) the two feature bitmaps into one logical `features` map.
@@ -523,6 +536,20 @@ The receiving node:
   - if the feature vector does not set all known, transitive dependencies:
     - MUST close the connection.
   - MAY use the `remote_addr` to update its `node_announcement`
+-->
+受信側のノード：
+  - 他のメッセージを受信する前に、 `init` の受信を待たなければなりません（MUST）。
+  - ２つの特徴ビットマップを１つの論理的な `features` マップに結合（論理和）しなければなりません（MUST）。
+  - [BOLT #9](09-features.md)で指定されてるように、既知の機能ビットに対して応答しなければなりません（MUST）。
+  - 0でない未知の _奇数_ 特徴ビットを受信した場合
+    - そのビットを無視しなければなりません（MUST）。
+  - 0でない未知の _偶数_ 特徴ビットを受信した場合
+    - 接続を閉じなければなりません（MUST）。
+  - 共通チェーンを持たない `networks` を受信した場合：
+    - 接続を終了しても良い（MAY）。
+  - 特徴ベクトルが全ての既知の推移的依存関係を設定しない場合：
+    - 接続を閉じなければなりません（MUST）。
+  - `remote_addr` を使って、 `node_announcement`を更新しても良い（MAY）。
 
 #### Rationale
 
