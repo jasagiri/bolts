@@ -245,6 +245,7 @@ according to the message-specific format determined by `type`.
 
 ### Requirements
 
+<!--
 The sending node:
  - MUST order `tlv_record`s in a `tlv_stream` by strictly-increasing `type`,
    hence MUST not produce more than a single TLV record with the same `type`
@@ -257,7 +258,17 @@ The sending node:
    - SHOULD pick even `type` identifiers when regular nodes should reject the
      full tlv stream containing the custom record.
  - SHOULD NOT use redundant, variable-length encodings in a `tlv_record`.
+-->
+送信側ノード：
+  -  `tlv_stream` 内の `tlv_record` は `type` が厳密に増加するように並べられなければならず（MUST）、同じ `type` をもつ複数のTLVレコードを生成してはなりません（MUST）。
+  -  `type` と `length` は最小限のエンコードで表現しなければなりません（MUST）。
+  - カスタムレコードの `type` 識別子を定義する場合：
+    - 他のカスタムタイプとの衝突を避けるために、ランダムな `type` 識別子を選ぶべきです（SHOULD）。
+    - 通常のノードが追加データを無視する場合は、奇数の `type` 識別子を選ぶべきです（SHOULD）。
+    - 通常のノードは追加データを拒否する必要があり、カスタムレコードを含む完全なtlvストリームを拒否するべきです（SHOULD）。
+    - 冗長な可変長エンコーディングを `tlv_record` の中で使うべきではありません（SHOULD NOT）。
 
+<!--
 The receiving node:
  - if zero bytes remain before parsing a `type`:
    - MUST stop parsing the `tlv_stream`.
@@ -279,6 +290,27 @@ The receiving node:
      - MUST fail to parse the `tlv_stream`.
    - otherwise, if `type` is odd:
      - MUST discard the next `length` bytes.
+-->
+受信側ノード：
+  -  `type` をパースする前に０バイトが残っていた場合：
+    - `tlv_stream` のパースを停止しなければなりません（MUST）。
+  - `type` または `length` が最小限のエンコードでない場合：
+    - `tlv_stream` のパースに失敗しなければなりません（MUST）。
+  -  デコードされた `type` が厳密に増加しない場合（同じものが２つ以上現れる場合を含む）：
+    - `tlv_stream` のパースに失敗しなければなりません（MUST）。
+  - もし `length` がメッセージの残りのバイト数を超えている場合：
+    - `tlv_stream` のパースに失敗しなければなりません（MUST）。
+  - もし `type` が既知の場合：
+    - 次の `length` バイトを `type` の既知のエンコーディングでデコードしなければなりません（MUST）。
+  - もし `length` が `type` の既知のエンコーディングに必要なバイト数と正確に等しくない場合：
+    - `tlv_stream` のパースに失敗しなければなりません（MUST）。
+  - `type` の既知のエンコーディングに含まれるか変調のフィールドが最小でない場合：
+    - `tlv_stream` のパースに失敗しなければなりません（MUST）。
+  - それ以外の場合で `type` が未知の場合：
+    - もし `type` が偶数の場合：
+      -  `tlv_stream` のパースに失敗しなければなりません（MUSt）。
+    - もし `type` が奇数の場合：
+      - 次の `length` バイトを破棄しなければなりません（MUST）。
 
 ### Rationale
 
