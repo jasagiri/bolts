@@ -194,20 +194,33 @@ a buffer with 6-bytes of pre-padding.
 実装では、メッセージデータを８バイト境界に一列に並べることを好むかもしれません（ここでは、どの型でも自然なアライメント要件が最大です）。；しかし型フィールドの後に６バイトのパディングを追加する事は無駄だと考えられます。：６バイトの事前パディングを持つバッファにメッセージを復号化する事によって、一列に並べることを達成できます。
 
 ## Type-Length-Value Format
-
+<!--
 Throughout the protocol, a TLV (Type-Length-Value) format is used to allow for
 the backwards-compatible addition of new fields to existing message types.
+-->
+プロトコル全体を通して、TLV(Type-Length-Value)フォーマットは、既存のメッセージ型に新しいフィールドをこうほうごかん的に追加できるようにする為に使用されます。
 
+<!--
 A `tlv_record` represents a single field, encoded in the form:
 
 * [`bigsize`: `type`]
 * [`bigsize`: `length`]
 * [`length`: `value`]
+-->
+ `tlv_record` は１つのフィールドを表し、以下のようなフォーマットでエンコードされます。
 
+* [`bigsize`: `type`]
+* [`bigsize`: `length`]
+* [`length`: `value`]
+
+<!--
 A `tlv_stream` is a series of (possibly zero) `tlv_record`s, represented as the
 concatenation of the encoded `tlv_record`s. When used to extend existing
 messages, a `tlv_stream` is typically placed after all currently defined fields.
+-->
+ `tlv_stream` は一連の（おそらくはゼロ個の） `tlv_record` です。エンコードされた `tlv_record` を連結したものです。既存のメッセージを拡張する為に使用する場合、`tlv_stream` は通常、現在定義されている全てのフィールドの後に配置されます。
 
+<!--
 The `type` is encoded using the BigSize format. It functions as a
 message-specific, 64-bit identifier for the `tlv_record` determining how the
 contents of `value` should be decoded. `type` identifiers below 2^16 are
@@ -215,12 +228,20 @@ reserved for use in this specification. `type` identifiers greater than or equal
 to 2^16 are available for custom records. Any record not defined in this
 specification is considered a custom record. This includes experimental and
 application-specific messages.
+-->
+ `type` は BigSize フォーマットでエンコードされています。これはメッセージ固有のものとして機能します。６４ビットで、 `tlv_record` の識別子として機能し、 `value` の内容がどのようにデコードされるかを決定します。 2^16 以下の `type` 識別子は、この仕様では予約されています。 2^16 以上の `type` 識別子は、カスタムレコードに使用できます。この仕様で定義されていないレコードは全てカスタムレコードと見做されます。これには実験的なメッセージやアプリケーション固有のメッセージも含まれます。
 
+<!--
 The `length` is encoded using the BigSize format signaling the size of
 `value` in bytes.
+-->
+ `length` は BigSize フォーマットでエンコードされ、`value` のサイズをバイト数で示します
 
+<!--
 The `value` depends entirely on the `type`, and should be encoded or decoded
 according to the message-specific format determined by `type`.
+-->
+ `value` は `type` に完全に依存し、 `type` によって決定されるメッセージ固有のフォーマットに従ってエンコードまたはデコードされなけれまなりません。
 
 ### Requirements
 
