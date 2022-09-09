@@ -314,12 +314,16 @@ The receiving node:
 
 ### Rationale
 
+<!--
 The primary advantage in using TLV is that a reader is able to ignore new fields
 that it does not understand, since each field carries the exact size of the
 encoded element. Without TLV, even if a node does not wish to use a particular
 field, the node is forced to add parsing logic for that field in order to
 determine the offset of any fields that follow.
+-->
+TLVを使用する主な利点は、各フィールドはエンコードされた要素の正確なサイズを伝えるので、読者が理解できない新しいフィールドを無視できることです。TLVを使用しない場合、ノードが特定のフィールドを使用したくない場合でも、そのフィールドのオフセットを決定するために、そのフィールドの解析ロジックを追加することを余儀なくされます。
 
+<!--
 The strict monotonicity constraint ensures that all `type`s are unique and can
 appear at most once. Fields that map to complex objects, e.g. vectors, maps, or
 structs, should do so by defining the encoding such that the object is
@@ -331,18 +335,31 @@ things, enables the following optimizations:
  - verifying canonical ordering requires less state and is less-expensive.
  - variable-size fields can reserve their expected size up front, rather than
    appending elements sequentially and incurring double-and-copy overhead.
+-->
+厳密な単調性制約により、すべての `type` は一意であり、最大１度しか現れないことが保証されます。ベクトル、マップ、構造体などの複雑なオブジェクトにマッピングするフィールドは、そのオブジェクトが１つの `tlv_record` に格納されるようにエンコーディングを定義しなければなりません。一意性制約は、特に以下のような最適化を可能にします。：
+  - 正準順序は、エンコードされた `value` とは無関係に定義されます。
+  - 正準順序は、エンコード時に動的に決定されるのではなく、コンパイル時に知ることができます。
+  - 正準順序の検証は、少ない状態で済み、コストも低く抑えられます。
+  - 可変サイズフィールドは、要素を順次追加してダブルアンドコピーのオーバーヘッドを発生させるのではなく、前もって予想されるサイズを予約することができます。
 
+<!--
 The use of a bigsize for `type` and `length` permits a space savings for small
 `type`s or short `value`s. This potentially leaves more space for application
 data over the wire or in an onion payload.
+-->
+`type` と `length` に大きなサイズを使用することで、小さな `type` や短い `value` のためのスペースを節約できます。このため、アプリケーションのデータ用に、より多くのスペースを確保できる可能性があります。このため、アプリケーションのデータをワイヤ上やオニオンペイロードに格納するためのスペースを確保できる可能性があります。
 
+<!--
 All `type`s must appear in increasing order to create a canonical encoding of
 the underlying `tlv_record`s. This is crucial when computing signatures over a
 `tlv_stream`, as it ensures verifiers will be able to recompute the same message
 digest as the signer. Note that the canonical ordering over the set of fields
 can be enforced even if the verifier does not understand what the fields
 contain.
+-->
+全ての `type` は `tlv_record` の正規のエンコーディングを作成するために、昇順で表示されなければなりません。これは `tlv_stream` に対する署名を計算する際に重要なことで、フィールドの集合に対する正規の順序は、検証者が署名者と同じメッセージダイジェストを再計算できることを保証するからです。検証者がそのフィールドの内容を理解していなくてもそのフィールドの集合に対する正貴女順序を矯正できる事に注意してください。
 
+<!--
 Writers should avoid using redundant, variable-length encodings in a
 `tlv_record` since this results in encoding the length twice and complicates
 computing the outer length. As an example, when writing a variable length byte
@@ -351,6 +368,8 @@ internal length since the `tlv_record` already carries the number of bytes that
 follow. On the other hand, if a `tlv_record` contains multiple, variable-length
 elements then this would not be considered redundant, and is needed to allow the
 receiver to parse individual elements from `value`.
+-->
+ライターは `tlv_record` 内で冗長な可変長エンコーディングを使用しないようにすべきです。これは、長さを２回エンコードする事になり、外側の長さを計算するのが複雑になるからです。例として可変長のバイト列を書く場合、 `tlv_record` はすでにその後に続くバイト数を保持しているからです。一方で、もし `tlv_record` が複数の可変長の要素を含んできる場合、この問題は解決されず、受信者が `value` から個々の要素をパースできるようにするために必要です。
 
 ## Fundamental Types
 
