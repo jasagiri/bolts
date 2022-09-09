@@ -439,10 +439,17 @@ The following convenience types are also defined:
 
 ### The `init` Message
 
+<!--
 Once authentication is complete, the first message reveals the features supported or required by this node, even if this is a reconnection.
+-->
+認証が完了すると、最初のメッセージで、再接続があっても、このノードがサポートまたは必要とする機能が明らかにされます。
 
+<!--
 [BOLT #9](09-features.md) specifies lists of features. Each feature is generally represented by 2 bits. The least-significant bit is numbered 0, which is _even_, and the next most significant bit is numbered 1, which is _odd_.  For historical reasons, features are divided into global and local feature bitmasks.
+-->
+[BOLT #9](09-features.md)では、特徴量のリストを指定します。各特徴は一般に２ビットで表現されます。最下位ビットは０番で _偶数_ 、その次の最上位ビットは１番で _奇数_ です。歴史的な理由から、素性はグローバルとローカルのビットマスクに分けられます。
 
+<!--
 The `features` field MUST be padded to bytes with 0s.
 
 1. type: 16 (`init`)
@@ -464,6 +471,28 @@ The `features` field MUST be padded to bytes with 0s.
 
 The optional `networks` indicates the chains the node is interested in.
 The optional `remote_addr` can be used to circumvent NAT issues.
+-->
+特徴フィールドは、０を含むバイトでパディングされなければなりません（MUST）。
+
+1. type: 16 (`init`)
+2. data:
+   * [`u16`:`gflen`]
+   * [`gflen*byte`:`globalfeatures`]
+   * [`u16`:`flen`]
+   * [`flen*byte`:`features`]
+   * [`init_tlvs`:`tlvs`]
+
+1. `tlv_stream`: `init_tlvs`
+2. types:
+    1. type: 1 (`networks`)
+    2. data:
+        * [`...*chain_hash`:`chains`]
+    1. type: 3 (`remote_addr`)
+    2. data:
+        * [`...*byte`:`data`]
+
+オプションの `networks` はノードが関心を持つチェーンを示します。
+オプションの `remote_addr` は、NATの問題を解決する為に使用できます。
 
 #### Requirements
 
